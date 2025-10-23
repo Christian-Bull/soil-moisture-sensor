@@ -11,6 +11,7 @@
 #include <linux/types.h>
 #include <linux/cdev.h>
 #include <linux/fs.h> // file_operations
+#include "soil-driver.h"
 
 int soil_major =   0; // use dynamic major
 int soil_minor =   0;
