@@ -11,6 +11,7 @@
 #include <linux/types.h>
 #include <linux/cdev.h>
 #include <linux/fs.h> // file_operations
+#include <linux/version.h>
 #include "soil-driver.h"
 
 int soil_major =   0; // use dynamic major
@@ -99,7 +100,14 @@ int soil_init_module(void)
 
     printk(KERN_INFO "soil_driver: registered with major %d\n", soil_major);
 
-    soil_class = class_create(THIS_MODULE, "soil");
+#ifdef class_create
+    /* Macro form → takes 2 arguments */
+    soil_class = class_create(THIS_MODULE, "soil-driver");
+#else
+    /* Function form → takes 1 argument */
+    soil_class = class_create("soil-driver");
+#endif
+
     if (IS_ERR(soil_class)) {
         unregister_chrdev_region(dev, 1);
         return PTR_ERR(soil_class);
