@@ -1,6 +1,6 @@
 #!/bin/sh
-module=soilmoisture
-device=soilmoisture
+module=soil-driver
+device=soil-driver
 cd `dirname $0`
 # invoke rmmod with all arguments we got
 rmmod $module || exit 1

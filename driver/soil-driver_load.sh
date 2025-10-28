@@ -1,6 +1,6 @@
 #!/bin/sh
-module=soilmoisture
-device=soilmoisture
+module=soil-driver
+device=soil-driver
 mode="666"
 cd `dirname $0`
 set -e
