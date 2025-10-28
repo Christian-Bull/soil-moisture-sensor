@@ -15,6 +15,8 @@
 
 int soil_major =   0; // use dynamic major
 int soil_minor =   0;
+static struct class *soil_class;
+static struct device *soil_device_ptr;
 
 MODULE_AUTHOR("Christian Bull");
 MODULE_LICENSE("Dual BSD/GPL");
@@ -80,8 +82,8 @@ int soil_init_module(void)
 {
     dev_t dev = 0;
     int result;
-    result = alloc_chrdev_region(&dev, soil_minor, 1,
-            "soilchar");
+    result = alloc_chrdev_region(&dev, soil_minor, 1, "soil-driver");
+
     soil_major = MAJOR(dev);
     if (result < 0) {
         printk(KERN_WARNING "Can't get major %d\n", soil_major);
@@ -94,6 +96,22 @@ int soil_init_module(void)
     if( result ) {
         unregister_chrdev_region(dev, 1);
     }
+
+    printk(KERN_INFO "soil_driver: registered with major %d\n", soil_major);
+
+    soil_class = class_create(THIS_MODULE, "soil");
+    if (IS_ERR(soil_class)) {
+        unregister_chrdev_region(dev, 1);
+        return PTR_ERR(soil_class);
+    }
+
+    soil_device_ptr = device_create(soil_class, NULL, dev, NULL, "soil-driver");
+    if (IS_ERR(soil_device_ptr)) {
+        class_destroy(soil_class);
+        unregister_chrdev_region(dev, 1);
+        return PTR_ERR(soil_device_ptr);
+    }
+
     return result;
 
 }
@@ -105,6 +123,10 @@ void soil_cleanup_module(void)
     cdev_del(&soil_device.cdev);
 
     unregister_chrdev_region(devno, 1);
+    
+    device_destroy(soil_class, devno);
+    
+    class_destroy(soil_class);
 }
 
 module_init(soil_init_module);
