@@ -5,3 +5,4 @@ build/
 crosstool-ng
 .vscode/
 test.sh.log
+tmp/*
