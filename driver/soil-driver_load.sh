@@ -18,3 +18,6 @@ else
     echo "Local file ${module}.ko not found, attempting to modprobe"
     modprobe ${module} || exit 1
 fi
+
+chgrp $group /dev/${device}
+chmod $mode  /dev/${device}
