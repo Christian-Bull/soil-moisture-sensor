@@ -182,7 +182,6 @@ int soil_init_module(void)
     if (!soil_adap) {
         pr_err("soil-driver: failed to get i2c adapter %d\n", I2C_BUS_NUM);
         result = -ENODEV;
-        goto err_unregister_chrdev;
     }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 5, 0)
@@ -194,7 +193,6 @@ int soil_init_module(void)
         pr_err("soil-driver: failed to create i2c client at 0x%02x\n", ADS1115_ADDR);
         result = PTR_ERR(soil_device.client);
         soil_device.client = NULL;
-        goto err_put_adapter;
     }
 
 #ifdef class_create
@@ -217,15 +215,6 @@ int soil_init_module(void)
         return PTR_ERR(soil_device_ptr);
     }
 
-err_destroy_device:
-    device_destroy(soil_class, dev);
-err_destroy_class:
-    class_destroy(soil_class);
-    soil_class = NULL;
-err_del_cdev:
-    cdev_del(&soil_device.cdev);
-err_unregister_chrdev:
-    unregister_chrdev_region(dev, 1);
     return result;
 }
  
