@@ -12,7 +12,14 @@
 #include <linux/cdev.h>
 #include <linux/fs.h> // file_operations
 #include <linux/version.h>
+#include <linux/i2c.h>
+#include <linux/delay.h>
+#include <linux/uaccess.h>
 #include "soil-driver.h"
+
+#define ADS1115_CONVERSION_REG   0x00
+#define ADS1115_CONFIG_REG       0x01
+#define ADS1115_CONFIG_SINGLE_A0_4096_128SPS  0xC383
 
 int soil_major =   0; // use dynamic major
 int soil_minor =   0;
@@ -26,10 +33,16 @@ struct soil_dev soil_device;
 
 int soil_open(struct inode *inode, struct file *filp)
 {
+    struct soil_dev *dev;
+
     PDEBUG("open");
+
+    dev = container_of(inode->i_cdev, struct soil_dev, cdev);
+    filp->private_data = dev;
 
     return 0;
 }
+
 
 int soil_release(struct inode *inode, struct file *filp)
 {

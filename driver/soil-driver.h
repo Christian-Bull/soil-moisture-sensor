@@ -17,6 +17,7 @@
 struct soil_dev
 {
     struct cdev cdev;     /* Char device structure      */
+    struct i2c_client *client;
 };
 
 
