@@ -86,7 +86,7 @@ ssize_t soil_read(struct file *filp, char __user *buf, size_t count,
 	struct soil_dev *dev = filp->private_data;
 	s16 raw;
 	int ret;
-	double volts;
+	int mv;
 	char kbuf[64];
 	int len;
 
@@ -117,7 +117,7 @@ ssize_t soil_read(struct file *filp, char __user *buf, size_t count,
                 raw,
                 mv / 1000,
                 abs(mv % 1000));
-                
+
 	if (count < len)
 		len = count;
 
