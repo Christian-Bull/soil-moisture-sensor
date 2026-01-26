@@ -109,11 +109,15 @@ ssize_t soil_read(struct file *filp, char __user *buf, size_t count,
 	if (ret < 0)
 		return ret;
 
-	volts = (double)raw * 4.096 / 32768.0;
+    mv = (raw * 4096) / 32768;
 
 	// format output for userspace
-	len = scnprintf(kbuf, sizeof(kbuf), "Raw: %d\tVoltage: %.4f V\n", raw, volts);
-
+    len = scnprintf(kbuf, sizeof(kbuf),
+                "Raw: %d\tVoltage: %d.%03d V\n",
+                raw,
+                mv / 1000,
+                abs(mv % 1000));
+                
 	if (count < len)
 		len = count;
 
