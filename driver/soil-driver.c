@@ -217,10 +217,18 @@ int soil_init_module(void)
         return PTR_ERR(soil_device_ptr);
     }
 
+err_destroy_device:
+    device_destroy(soil_class, dev);
+err_destroy_class:
+    class_destroy(soil_class);
+    soil_class = NULL;
+err_del_cdev:
+    cdev_del(&soil_device.cdev);
+err_unregister_chrdev:
+    unregister_chrdev_region(dev, 1);
     return result;
-
 }
-
+ 
 void soil_cleanup_module(void)
 {
     dev_t devno = MKDEV(soil_major, soil_minor);
@@ -237,7 +245,7 @@ void soil_cleanup_module(void)
     i2c_unregister_device(soil_device.client);
     soil_device.client = NULL;
     }
-    
+
     if (soil_adap) {
         i2c_put_adapter(soil_adap);
         soil_adap = NULL;
