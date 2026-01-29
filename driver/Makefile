@@ -15,7 +15,7 @@ EXTRA_CFLAGS += $(DEBFLAGS)
 # kernel build system and can use its language.
 ifneq ($(KERNELRELEASE),)
 
-obj-m	:= soil-driver.o
+obj-m	:= soil-driver-i2c.o
 	
 # Otherwise we were called directly from the command
 # line; innvoke the kernel build system	

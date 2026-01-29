@@ -1,6 +1,6 @@
 #!/bin/sh
-module=soil-driver
-device=soil-driver
+module=soil-driver-i2c
+device=soil-driver-i2c
 mode="666"
 cd `dirname $0`
 set -e
